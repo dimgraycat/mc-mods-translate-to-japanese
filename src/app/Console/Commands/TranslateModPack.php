@@ -28,8 +28,13 @@ class TranslateModPack extends Command
     {
         $mod = $this->option('name');
         $ver = $this->option('ver');
-        $src = base_path("tmp/{$mod}/lang/ja_jp.json");
 
+        if (!$mod || !$ver) {
+            $this->error('--name と --ver は必須です');
+            return Command::FAILURE;
+        }
+
+        $src = storage_path("tmp/{$mod}/lang/ja_jp.json");
         if (!file_exists($src)) {
             $this->error("ja_jp.json not found: tmp/{$mod}/lang/ja_jp.json");
             return Command::FAILURE;
@@ -57,7 +62,7 @@ class TranslateModPack extends Command
             $zip->addFile($src, "assets/{$mod}/lang/ja_jp.json");
 
             $zip->close();
-            $this->info("Created resource pack: build/resourcepacks/{$mod}-{$ver}.zip");
+            $this->info("Created resource pack: build/resourcepacks/{$mod}-translate-to-japanese-{$ver}.zip");
             return Command::SUCCESS;
         } else {
             $this->error("Failed to create zip file.");

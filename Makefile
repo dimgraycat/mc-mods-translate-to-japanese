@@ -4,9 +4,17 @@ GID := $(shell id -g)
 # Dockerサービス名
 SERVICE=laravel-cli
 
-MOD=
+# 共通
 VER=
+
+# extract
+MOD=
+EXTRACT_SRC=mods/$(MOD)
+EXTRACT_TMP=src/storage/mods/$(MOD)
+
+# pack
 NAME=
+JSON_SRC=translated/$(VER)/$(NAME)
 
 init:
 	docker compose up -d --build
@@ -16,7 +24,16 @@ init:
 	sudo chmod -R 775 src/storage src/bootstrap/cache
 
 extract:
-	docker compose run --rm --user $(UID):$(GID) $(SERVICE) php artisan translate:extract $(MOD)
+	cp $(EXTRACT_SRC) $(EXTRACT_TMP)
+
+	docker compose run --rm --user $(UID):$(GID) $(SERVICE) php artisan translate:extract --mod $(MOD) --ver $(VER)
+
+	rm -rf tmp/*
+	mv -f src/storage/tmp/* tmp/
+	rm -rf $(EXTRACT_TMP)
 
 pack:
+	cp -r $(JSON_SRC) src/storage/tmp
 	docker compose run --rm --user $(UID):$(GID) $(SERVICE) php artisan translate:pack --name $(NAME) --ver $(VER)
+	rm -rf src/storage/tmp/*
+	mv src/build/resourcepacks/* build/resourcepacks

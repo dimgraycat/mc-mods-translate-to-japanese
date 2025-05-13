@@ -12,7 +12,7 @@ class TranslateModExtract extends Command
      *
      * @var string
      */
-    protected $signature = 'translate:extract {modJar}';
+    protected $signature = 'translate:extract {--mod=} {--ver=}';
 
     /**
      * The console command description.
@@ -26,9 +26,15 @@ class TranslateModExtract extends Command
      */
     public function handle()
     {
-        $modJar = $this->argument('modJar');
-        $jarPath = base_path("mods/{$modJar}");
+        $modJar = $this->option('mod');
+        $ver = $this->option('ver');
 
+        if (!$modJar || !$ver) {
+            $this->error('--mod と --ver は必須です');
+            return Command::FAILURE;
+        }
+
+        $jarPath = storage_path("mods/{$modJar}");
         if (!file_exists($jarPath)) {
             $this->error("MOD jar not found: {$jarPath}");
             return Command::FAILURE;
@@ -47,13 +53,13 @@ class TranslateModExtract extends Command
                 $modName = $matches[1];
                 $content = $zip->getFromName($entry);
 
-                $outputDir = base_path("tmp/{$modName}/lang");
+                $outputDir = storage_path("tmp/{$ver}/{$modName}/lang");
                 if (!is_dir($outputDir)) {
                     mkdir($outputDir, 0777, true);
                 }
 
                 file_put_contents("{$outputDir}/en_us.json", $content);
-                $this->info("Extracted: {$modJar} → tmp/{$modName}/lang/en_us.json");
+                $this->info("Extracted: {$modJar} → tmp/{$ver}/{$modName}/lang/en_us.json");
 
                 $zip->close();
                 return Command::SUCCESS;
