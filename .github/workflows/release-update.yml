@@ -1,0 +1,62 @@
+name: Build and Upload Resource Packs
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  build-and-upload:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Releaseアップロードに必要
+
+    steps:
+      - name: 📦 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🐳 Set up Docker
+        uses: docker/setup-buildx-action@v3
+
+      - name: 🔧 Install make, jq, gh CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y make jq gh
+
+      - name: 📥 Get release asset list
+        id: get_assets
+        run: |
+          tag="${GITHUB_REF##*/}"
+          gh release view "$tag" --json assets --jq '.assets[].name' > existing_assets.txt || touch existing_assets.txt
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🔄 Loop and pack changed files only
+        run: |
+          for json in translated/*/*/lang/ja_jp.json; do
+            [ -f "$json" ] || continue
+            name=$(basename $(dirname $(dirname "$json")))
+            ver=$(basename $(dirname $(dirname $(dirname "$json"))))
+            zipname="${name}-translate-to-japanese-${ver}.zip"
+            zip="build/resourcepacks/$zipname"
+
+            # パック対象判定: zipがない or jsonが新しい
+            if grep -Fxq "$zipname" existing_assets.txt; then
+              echo "✅ Already uploaded: $zipname → skipping"
+              continue
+            fi
+
+            if [ ! -f "$zip" ] || [ "$json" -nt "$zip" ]; then
+              echo "🔨 Packing $zipname..."
+              make pack NAME="$name" VER="$ver"
+            else
+              echo "♻️ Up-to-date: skipping $zipname"
+            fi
+          done
+
+      - name: 🚀 Upload new zips to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/resourcepacks/*.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
