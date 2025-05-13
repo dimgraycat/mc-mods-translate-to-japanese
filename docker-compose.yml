@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  laravel-cli:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    volumes:
+      - .:/var/www/html
+    working_dir: /var/www/html
+    command: tail -f /dev/null

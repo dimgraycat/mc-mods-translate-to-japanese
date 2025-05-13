@@ -21,3 +21,11 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+# add
+/mods/*
+!/mods/.gitkeep
+/tmp/*
+!/tmp/.gitkeep
+/build/resourcepacks/*
+!/build/resourcepacks/.gitkeep
