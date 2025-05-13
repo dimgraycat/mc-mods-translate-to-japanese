@@ -1,22 +1,22 @@
+UID := $(shell id -u)
+GID := $(shell id -g)
+
 # Dockerサービス名
 SERVICE=laravel-cli
 
-# MOD jarファイル名（拡張子 .jar 付き）
 MOD=
-
-# Minecraftバージョン（例: 1.20.1）
 VER=
+NAME=
 
-# 初回セットアップ（composer install）
 init:
-	docker-compose up -d --build
-	docker-compose exec $(SERVICE) composer install
-	docker-compose down
+	docker compose up -d --build
+	docker compose exec $(SERVICE) composer install
+	docker compose down
+	sudo chown -R $(shell id -u):$(shell id -g) storage bootstrap/cache
+	sudo chmod -R 775 storage bootstrap/cache
 
-# MODから en_us.json を抽出
 extract:
-	docker-compose run --rm $(SERVICE) php artisan translate:extract $(MOD)
+	docker compose run --rm --user $(UID):$(GID) $(SERVICE) php artisan translate:extract $(MOD)
 
-# ja_jp.json を zip にパック
 pack:
-	docker-compose run --rm $(SERVICE) php artisan translate:pack --name $(MOD) --ver $(VER)
+	docker compose run --rm --user $(UID):$(GID) $(SERVICE) php artisan translate:pack --name $(NAME) --ver $(VER)

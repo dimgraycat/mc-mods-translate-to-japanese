@@ -42,7 +42,7 @@ class TranslateModPack extends Command
         }
 
         $description = env('PACK_DESCRIPTION', "Translation Pack for {$mod}");
-        $zipPath = base_path("build/resourcepacks/{$mod}-{$ver}.zip");
+        $zipPath = base_path("build/resourcepacks/{$mod}-translate-to-japanese-{$ver}.zip");
         @mkdir(dirname($zipPath), 0777, true);
 
         $zip = new ZipArchive();

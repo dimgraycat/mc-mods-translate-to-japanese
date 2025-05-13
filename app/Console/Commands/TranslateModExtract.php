@@ -40,16 +40,21 @@ class TranslateModExtract extends Command
             return Command::FAILURE;
         }
 
-        $modName = pathinfo($modJar, PATHINFO_FILENAME);
-        $outputDir = base_path("tmp/{$modName}/lang");
-        @mkdir($outputDir, 0777, true);
-
         for ($i = 0; $i < $zip->numFiles; $i++) {
             $entry = $zip->getNameIndex($i);
-            if (preg_match('#^assets/[^/]+/lang/en_us\.json$#', $entry)) {
+
+            if (preg_match('#^assets/([^/]+)/lang/en_us\.json$#', $entry, $matches)) {
+                $modName = $matches[1];
                 $content = $zip->getFromName($entry);
+
+                $outputDir = base_path("tmp/{$modName}/lang");
+                if (!is_dir($outputDir)) {
+                    mkdir($outputDir, 0777, true);
+                }
+
                 file_put_contents("{$outputDir}/en_us.json", $content);
-                $this->info("Extracted: {$entry} → tmp/{$modName}/lang/en_us.json");
+                $this->info("Extracted: {$modJar} → tmp/{$modName}/lang/en_us.json");
+
                 $zip->close();
                 return Command::SUCCESS;
             }
