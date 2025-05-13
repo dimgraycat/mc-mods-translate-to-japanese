@@ -1,0 +1,6 @@
+{
+  "block.displaydelight.food_plate": "フードプレート",
+  "block.displaydelight.small_food_plate": "小型フードプレート",
+  "item.displaydelight.tooltip.can_placed_on": "盛り付け可能: ",
+  "item.displaydelight.tooltip.displayable": "スニーク中に設置可能"
+}
