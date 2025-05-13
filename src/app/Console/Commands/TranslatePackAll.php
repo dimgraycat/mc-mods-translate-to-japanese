@@ -35,7 +35,7 @@ class TranslatePackAll extends Command
         }
 
         $description = env('PACK_DESCRIPTION', "All in Japanese Translation Pack for MC v{$ver}");
-        $zipName = "translated-all-in-{$ver}.zip";
+        $zipName = "00-translated-all-in-{$ver}.zip";
         $zipPath = base_path("build/resourcepacks/{$zipName}");
 
         File::ensureDirectoryExists(dirname($zipPath));
