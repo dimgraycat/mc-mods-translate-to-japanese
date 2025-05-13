@@ -31,6 +31,9 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: 🧰 Install Composer dependencies
+        run: docker compose run --rm laravel-cli composer install --no-interaction --no-progress --prefer-dist
+
       - name: 🔄 Loop and pack changed files only
         run: |
           for json in translated/*/*/lang/ja_jp.json; do
