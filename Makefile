@@ -16,6 +16,9 @@ EXTRACT_TMP=src/storage/mods/$(MOD)
 NAME=
 JSON_SRC=translated/$(VER)/$(NAME)
 
+# pack-all
+JSON_VER_SRC=translated/$(VER)
+
 .PHONY: init
 init:
 	docker compose up -d --build
@@ -39,11 +42,20 @@ pack:
 	@zip="build/resourcepacks/$(NAME)-translate-to-japanese-$(VER).zip"; \
 	json="translated/$(VER)/$(NAME)/lang/ja_jp.json"; \
 	if [ ! -f $$zip ] || [ $$json -nt $$zip ]; then \
-		echo "Packing: $(NAME)-$(VER).zip"; \
+		echo "Packing: $(NAME)-translate-to-japanese-$(VER)"; \
 		cp -r $(JSON_SRC) src/storage/tmp; \
 		docker compose run --rm --user $(UID):$(GID) $(SERVICE) php artisan translate:pack --name $(NAME) --ver $(VER); \
 		rm -rf src/storage/tmp/*; \
 		mv src/build/resourcepacks/* build/resourcepacks; \
 	else \
-		echo "No update: skipping pack for $(NAME)-$(VER)"; \
+		echo "No update: skipping pack for $(NAME)-translate-to-japanese-$(VER)"; \
 	fi
+
+.PHONY: pack-all
+pack-all:
+	@zip="build/resourcepacks/translated-all-in-{$VER}.zip"; \
+	echo "Packing: translated-all-in-{$VER}.zip"; \
+	cp -r $(JSON_VER_SRC) src/storage/tmp; \
+	docker compose run --rm --user $(UID):$(GID) $(SERVICE) php artisan translate:pack-all --ver $(VER); \
+	rm -rf src/storage/tmp/*; \
+	mv src/build/resourcepacks/* build/resourcepacks;

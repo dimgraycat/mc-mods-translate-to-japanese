@@ -7,6 +7,8 @@ use ZipArchive;
 
 class TranslateModPack extends Command
 {
+    use Traits\PackFormats;
+
     /**
      * The name and signature of the console command.
      *
@@ -68,15 +70,5 @@ class TranslateModPack extends Command
             $this->error("Failed to create zip file.");
             return Command::FAILURE;
         }
-    }
-
-    private function getPackFormat(string $version): ?int
-    {
-        foreach (config('packformat') as $range) {
-            if (version_compare($version, $range['from'], '>=') && version_compare($version, $range['to'], '<=')) {
-                return $range['format'];
-            }
-        }
-        return null;
     }
 }
