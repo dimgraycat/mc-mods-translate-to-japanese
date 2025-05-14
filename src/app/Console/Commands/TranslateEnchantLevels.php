@@ -30,52 +30,61 @@ class TranslateEnchantLevels extends Command
      */
     public function handle()
     {
-        $ver = $this->option('ver');
+        $formVersion = $this->option('ver');
         $max = (int) $this->option('max');
-        if (!$ver) {
-            $this->error('--ver オプションは必須です');
+        if (!$max) {
+            $this->error('--max, --ver オプションは必須です');
             return Command::FAILURE;
         }
 
-        // pack_format 判定
-        $packFormat = $this->getPackFormat($ver);
-        if (!$packFormat) {
-            $this->error("pack_format が不明です: {$ver}");
-            return Command::FAILURE;
+        $list = $this->getPackFormatFromList($formVersion);
+        foreach ($list as $ver) {
+            // pack_format 判定
+            $packFormat = $this->getPackFormat($ver);
+            if (!$packFormat) {
+                $this->error("pack_format が不明です: {$ver}");
+                return Command::FAILURE;
+            }
+
+            $description = env('PACK_DESCRIPTION', 'Enchantment level romanization');
+            $zipName = "01-enchant-levels-{$ver}.zip";
+            $zipPath = base_path("build/resourcepacks/{$zipName}");
+            File::ensureDirectoryExists(dirname($zipPath));
+
+            // ja_jp.json の生成
+            $entries = [];
+            for ($i = 1; $i <= $max; $i++) {
+                $entries["enchantment.level.{$i}"] = intToRoman($i);
+            }
+
+            $langPath = "assets/minecraft/lang/ja_jp.json";
+            $mcmeta = json_encode([
+                'pack' => [
+                    'pack_format' => $packFormat,
+                    'description' => $description
+                ]
+            ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+
+            $langJson = json_encode($entries, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+
+            // translatedフォルダにも保存
+            $translatedPath = base_path("translated/{$ver}/enchant-levels/lang/ja_jp.json");
+            File::ensureDirectoryExists(dirname($translatedPath));
+            File::put($translatedPath, $langJson);
+            $this->line("📁 保存: translated/{$ver}/enchant-levels/lang/ja_jp.json");
+
+            $zip = new ZipArchive();
+            if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+                $this->error("ZIP作成に失敗しました: {$zipPath}");
+                return Command::FAILURE;
+            }
+
+            $zip->addFromString('pack.mcmeta', $mcmeta);
+            $zip->addFromString($langPath, $langJson);
+            $zip->close();
+
+            $this->info("✅ Resourcepack 作成完了: build/resourcepacks/{$zipName}");
         }
-
-        $description = env('PACK_DESCRIPTION', 'Enchantment level romanization');
-        $zipName = "01-enchant-levels-{$ver}.zip";
-        $zipPath = base_path("build/resourcepacks/{$zipName}");
-        File::ensureDirectoryExists(dirname($zipPath));
-
-        // ja_jp.json の生成
-        $entries = [];
-        for ($i = 1; $i <= $max; $i++) {
-            $entries["enchantment.level.{$i}"] = intToRoman($i);
-        }
-
-        $langPath = "assets/minecraft/lang/ja_jp.json";
-        $mcmeta = json_encode([
-            'pack' => [
-                'pack_format' => $packFormat,
-                'description' => $description
-            ]
-        ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-
-        $langJson = json_encode($entries, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-
-        $zip = new ZipArchive();
-        if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
-            $this->error("ZIP作成に失敗しました: {$zipPath}");
-            return Command::FAILURE;
-        }
-
-        $zip->addFromString('pack.mcmeta', $mcmeta);
-        $zip->addFromString($langPath, $langJson);
-        $zip->close();
-
-        $this->info("✅ Resourcepack 作成完了: build/resourcepacks/{$zipName}");
         return Command::SUCCESS;
     }
 }

@@ -71,4 +71,4 @@ diff:
 .PHONY: enchant-levels
 enchant-levels:
 	docker compose run --rm --user $(UID):$(GID) $(SERVICE) php artisan translate:enchant-levels --max=1000 --ver=$(VER)
-	mv src/build/resourcepacks/01-enchant-levels-$(VER).zip build/resourcepacks
+	mv src/build/resourcepacks/01-enchant-levels-*.zip build/resourcepacks
