@@ -62,6 +62,9 @@ class TranslateModExtract extends Command
                 $this->info("Extracted: {$modJar} → tmp/{$ver}/{$modName}/lang/en_us.json");
 
                 $zip->close();
+
+                $this->addModNameToConfig($modName);
+
                 return Command::SUCCESS;
             }
         }
@@ -69,5 +72,21 @@ class TranslateModExtract extends Command
         $zip->close();
         $this->error("en_us.json not found in: {$modJar}");
         return Command::FAILURE;
+    }
+
+    protected function addModNameToConfig(string $modName): void
+    {
+        $modnamesPath = config_path('modnames.php');
+        $modnames = file_exists($modnamesPath) ? include $modnamesPath : [];
+
+        if (!array_key_exists($modName, $modnames)) {
+            $modnames[$modName] = $modName;
+            ksort($modnames);
+
+            $export = "<?php\n\nreturn " . var_export($modnames, true) . ";\n";
+            file_put_contents($modnamesPath, $export);
+
+            $this->info("✅ modnames.php に {$modName} を追加しました。");
+        }
     }
 }
