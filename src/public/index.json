@@ -1,0 +1,96 @@
+[
+    {
+        "name": "enchant-levels",
+        "versions": [
+            "1.20",
+            "1.20.1",
+            "1.20.2",
+            "1.20.3",
+            "1.20.4",
+            "1.20.5",
+            "1.21",
+            "1.21.1",
+            "1.21.2",
+            "1.21.3",
+            "1.21.4",
+            "1.21.5"
+        ],
+        "links": [
+            "/enchant-levels-translate-to-japanese-1.20.zip",
+            "/enchant-levels-translate-to-japanese-1.20.1.zip",
+            "/enchant-levels-translate-to-japanese-1.20.2.zip",
+            "/enchant-levels-translate-to-japanese-1.20.3.zip",
+            "/enchant-levels-translate-to-japanese-1.20.4.zip",
+            "/enchant-levels-translate-to-japanese-1.20.5.zip",
+            "/enchant-levels-translate-to-japanese-1.21.zip",
+            "/enchant-levels-translate-to-japanese-1.21.1.zip",
+            "/enchant-levels-translate-to-japanese-1.21.2.zip",
+            "/enchant-levels-translate-to-japanese-1.21.3.zip",
+            "/enchant-levels-translate-to-japanese-1.21.4.zip",
+            "/enchant-levels-translate-to-japanese-1.21.5.zip"
+        ]
+    },
+    {
+        "name": "displaydelight",
+        "versions": [
+            "1.20.1"
+        ],
+        "links": [
+            "/displaydelight-translate-to-japanese-1.20.1.zip"
+        ]
+    },
+    {
+        "name": "pamhc2crops",
+        "versions": [
+            "1.20.1"
+        ],
+        "links": [
+            "/pamhc2crops-translate-to-japanese-1.20.1.zip"
+        ]
+    },
+    {
+        "name": "pamhc2foodcore",
+        "versions": [
+            "1.20.1"
+        ],
+        "links": [
+            "/pamhc2foodcore-translate-to-japanese-1.20.1.zip"
+        ]
+    },
+    {
+        "name": "pamhc2foodextended",
+        "versions": [
+            "1.20.1"
+        ],
+        "links": [
+            "/pamhc2foodextended-translate-to-japanese-1.20.1.zip"
+        ]
+    },
+    {
+        "name": "pamhc2trees",
+        "versions": [
+            "1.20.1"
+        ],
+        "links": [
+            "/pamhc2trees-translate-to-japanese-1.20.1.zip"
+        ]
+    },
+    {
+        "name": "reimaginingpotatoes",
+        "versions": [
+            "1.20.1"
+        ],
+        "links": [
+            "/reimaginingpotatoes-translate-to-japanese-1.20.1.zip"
+        ]
+    },
+    {
+        "name": "twilightforest",
+        "versions": [
+            "1.20.1"
+        ],
+        "links": [
+            "/twilightforest-translate-to-japanese-1.20.1.zip"
+        ]
+    }
+]

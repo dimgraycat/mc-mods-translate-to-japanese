@@ -70,3 +70,9 @@ jobs:
           files: build/resourcepacks/*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: 📦 Generate index.json for GitHub Pages
+        run: |
+          tag="${GITHUB_REF##*/}"
+          base_url="https://github.com/${{ github.repository }}/releases/download/${tag}"
+          docker compose run --rm --user $(id -u):$(id -g) laravel-cli \
+            php artisan translate:list-json --base-url="$base_url"
