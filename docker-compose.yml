@@ -7,5 +7,6 @@ services:
       - ./src:/var/www/html
       - ./tmp:/var/www/html/tmp
       - ./translated:/var/www/html/translated
+      - ./build:/var/www/html/build
     working_dir: /var/www/html
     command: tail -f /dev/null

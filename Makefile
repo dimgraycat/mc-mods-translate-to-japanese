@@ -50,7 +50,6 @@ pack:
 		cp -r $(JSON_SRC) src/storage/tmp; \
 		docker compose run --rm --user $(UID):$(GID) $(SERVICE) php artisan translate:pack --name $(NAME) --ver $(VER); \
 		rm -rf src/storage/tmp/*; \
-		mv src/build/resourcepacks/* build/resourcepacks; \
 	else \
 		echo "No update: skipping pack for $(NAME)-translate-to-japanese-$(VER)"; \
 	fi
@@ -61,8 +60,7 @@ pack-all:
 	echo "Packing: 00-translated-all-in-{$VER}.zip"; \
 	cp -r $(JSON_VER_SRC) src/storage/tmp; \
 	docker compose run --rm --user $(UID):$(GID) $(SERVICE) php artisan translate:pack-all --ver $(VER); \
-	rm -rf src/storage/tmp/*; \
-	mv src/build/resourcepacks/* build/resourcepacks;
+	rm -rf src/storage/tmp/*;
 
 .PHONY: diff
 diff:
@@ -71,7 +69,6 @@ diff:
 .PHONY: enchant-levels
 enchant-levels:
 	docker compose run --rm --user $(UID):$(GID) $(SERVICE) php artisan translate:enchant-levels --max=1000 --ver=$(VER)
-	mv src/build/resourcepacks/01-enchant-levels-*.zip build/resourcepacks
 
 .PHONY: list-json
 list-json:
