@@ -5,5 +5,7 @@ services:
       dockerfile: docker/php/Dockerfile
     volumes:
       - ./src:/var/www/html
+      - ./tmp:/var/www/html/tmp
+      - ./translated:/var/www/html/translated
     working_dir: /var/www/html
     command: tail -f /dev/null

@@ -19,6 +19,10 @@ JSON_SRC=translated/$(VER)/$(NAME)
 # pack-all
 JSON_VER_SRC=translated/$(VER)
 
+.PHONY: dump-autoload
+dump-autoload:
+	docker compose run --rm --user $(UID):$(GID) $(SERVICE) composer dump-autoload
+
 .PHONY: init
 init:
 	docker compose up -d --build
@@ -59,3 +63,12 @@ pack-all:
 	docker compose run --rm --user $(UID):$(GID) $(SERVICE) php artisan translate:pack-all --ver $(VER); \
 	rm -rf src/storage/tmp/*; \
 	mv src/build/resourcepacks/* build/resourcepacks;
+
+.PHONY: diff
+diff:
+	docker compose run --rm --user $(UID):$(GID) $(SERVICE) php artisan translate:diff --name=$(NAME) --ver=$(VER)
+
+.PHONY: enchant-levels
+enchant-levels:
+	docker compose run --rm --user $(UID):$(GID) $(SERVICE) php artisan translate:enchant-levels --max=1000 --ver=$(VER)
+	mv src/build/resourcepacks/01-enchant-levels-$(VER).zip build/resourcepacks
