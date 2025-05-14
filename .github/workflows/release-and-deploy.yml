@@ -71,6 +71,28 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Delete all but the latest release
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const releases = await github.rest.repos.listReleases({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 2,
+            });
+
+            const [latest, ...oldReleases] = releases.data;
+
+            for (const release of oldReleases) {
+              console.log(`Deleting release: ${release.tag_name}`);
+              await github.rest.repos.deleteRelease({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                release_id: release.id,
+              });
+            }
+
       - name:  Generate index.json using tagged release
         run: |
           TAG="${GITHUB_REF##*/}"
