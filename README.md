@@ -1,11 +1,11 @@
 # MC Mods Translate To Japanese
 
-日本語訳がされていないmodをリソースパックで日本語化できるようにします。
-[Releasesページ](https://github.com/dimgraycat/mc-mods-translate-to-japanese/releases)にて対応しているmodとバージョンがあります。
+日本語訳がされていないmodをリソースパックで日本語化できるようにします。<br>
+[Releasesページ](https://github.com/dimgraycat/mc-mods-translate-to-japanese/releases)にて対応しているmodとバージョンがあります。<br>
 また、バージョンごとに全て含めたリソースパックもあります。
 
-ソースコードに関しては、利用すだけでは翻訳が出来るわけではありません。
-modファイルからen_us.jsonファイルを抜き出す作業とリソースパック化をコードで対応してあります。
+ソースコードに関しては、利用すだけでは翻訳が出来るわけではありません。<br>
+modファイルからen_us.jsonファイルを抜き出す作業とリソースパック化をコードで対応してあります。<br>
 翻訳は適宜生成AIなどで対応です。
 
 ## PRsについて
