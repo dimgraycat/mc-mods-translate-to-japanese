@@ -1,0 +1,36 @@
+name: 🚀 Deploy to GitHub Pages
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  deploy-pages:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write  # 必須: gh-pages に push するため
+
+    steps:
+      - name: ⬇️ Checkout repository
+        uses: actions/checkout@v3
+
+      - name: 🔧 Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: 🛠 Generate index.json using tagged release
+        run: |
+          TAG="${GITHUB_REF##*/}"
+          BASE_URL="https://github.com/${{ github.repository }}/releases/download/${TAG}"
+          docker compose run --rm --user $(id -u):$(id -g) laravel-cli \
+            php artisan translate:list-json --base-url="${BASE_URL}"
+
+      - name: 🚀 Deploy public/ to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./src/public
+          publish_branch: gh-pages
+          force_orphan: true
