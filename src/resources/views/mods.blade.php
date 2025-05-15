@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-<h2 id="mod-title" class="text-lg font-semibold mt-4 mb-2">MOD情報を読み込み中...</h2>
+<h2 id="mod-title" class="text-lg font-semibold mt-4 mb-4">MOD情報を読み込み中...</h2>
 <div id="mod-supported-versions-container" class="flex items-center flex-wrap gap-1 mb-1 text-sm" style="display: none;">
   <span class="text-sm text-gray-600">対応バージョン:</span>
   <span id="mod-versions-list">
@@ -11,15 +11,7 @@
   <table class="min-w-full divide-y divide-gray-300 text-sm">
     <thead class="bg-gray-100">
       <tr>
-        <th scope="col" class="px-4 py-2 w-32 text-left font-semibold text-gray-700">
-          <button onclick="sortTableByVersion()" title="バージョンでソート"
-            class="flex items-center gap-1 px-2 py-1 rounded hover:bg-gray-200">
-            <span>バージョン</span>
-            <span class="relative w-3 h-4 ml-1">
-              <i id="versionSortUp" class="fas fa-sort-up text-gray-400 absolute top-0 left-0"></i>
-              <i id="versionSortDown" class="fas fa-sort-down text-gray-400 absolute bottom-0 left-0"></i>
-            </span>
-          </button>
+        <th scope="col" class="px-4 py-2 w-32 text-right font-semibold text-gray-700">バージョン
         </th>
         <th scope="col" class="px-4 py-2 text-left font-semibold text-gray-700">ファイル名</th>
         <th scope="col" class="px-4 py-2 text-left font-semibold text-gray-700">SHA1</th>
@@ -75,9 +67,35 @@ document.addEventListener('DOMContentLoaded', function () {
             document.title = `${currentMod.name} | ${document.title.split('|').pop().trim()}`; // Update page title
 
             // 対応バージョン表示
-            modVersionsListElement.innerHTML = ''; // Clear previous
-            if (currentMod.versions && currentMod.versions.length > 0) {
-                currentMod.versions.forEach(version => {
+            modVersionsListElement.innerHTML = '';
+            let displayableVersions = new Set();
+
+            if (currentMod.versions && currentMod.versions.length > 0 && packFormatData.length > 0) {
+                currentMod.versions.forEach(actualVersion => {
+                    packFormatData.forEach(pf => {
+                        // actualVersion が pf.from と pf.to の範囲内にあるかチェック
+                        // packformat.php の from/to が文字列であることを想定
+                        if (compareVersions(actualVersion, pf.from) >= 0 && compareVersions(actualVersion, pf.to) <= 0) {
+                            displayableVersions.add(pf.from);
+                            displayableVersions.add(pf.to);
+                        }
+                    });
+                });
+            }
+
+            if (displayableVersions.size > 0) {
+                const sortedDisplayVersions = Array.from(displayableVersions).sort(compareVersions);
+                sortedDisplayVersions.forEach(version => {
+                    const versionSpan = document.createElement('span');
+                    versionSpan.className = 'inline-block bg-blue-100 text-blue-800 text-xs font-semibold mr-1 px-2.5 py-0.5 rounded';
+                    versionSpan.textContent = version;
+                    modVersionsListElement.appendChild(versionSpan);
+                });
+                modVersionsContainerElement.style.display = 'flex';
+            } else if (currentMod.versions && currentMod.versions.length > 0) {
+                // フォールバック: packFormatData とのマッチングがうまくいかなかった場合など
+                // currentMod.versions をそのまま表示 (ソートしておく)
+                currentMod.versions.sort(compareVersions).forEach(version => {
                     const versionSpan = document.createElement('span');
                     versionSpan.className = 'inline-block bg-blue-100 text-blue-800 text-xs font-semibold mr-1 px-2.5 py-0.5 rounded';
                     versionSpan.textContent = version;
@@ -88,19 +106,39 @@ document.addEventListener('DOMContentLoaded', function () {
                 modVersionsContainerElement.style.display = 'none';
             }
 
-            modDownloadsTbodyElement.innerHTML = ''; // Clear previous
+            modDownloadsTbodyElement.innerHTML = '';
             if (currentMod.links && Object.keys(currentMod.links).length > 0) {
-                const sortedVersions = Object.keys(currentMod.links).sort((a, b) => compareVersions(b, a)); // デフォルトは降順
+                const sortedVersions = Object.keys(currentMod.links).sort((a, b) => compareVersions(b, a));
 
-                sortedVersions.forEach(version => {
-                    const linkData = currentMod.links[version];
+                sortedVersions.forEach(versionKey => {
+                    const linkData = currentMod.links[versionKey];
                     const row = modDownloadsTbodyElement.insertRow();
-                    row.insertCell().outerHTML = `<td class="px-4 py-2 font-bold text-gray-900 text-right">${version}</td>`;
-                    row.insertCell().innerHTML = `<a href="${linkData.url}" class="text-blue-600 hover:underline" download><i class="fas fa-download mr-1"></i>${linkData.file}</a>`;
-                    row.insertCell().innerHTML = `<span class="font-mono text-xs break-all">${linkData.sha1 || 'N/A'}</span>`;
+
+                    let displayVersion = versionKey; // デフォルトは元のキー
+                    // packFormatData は layouts/app.blade.php で定義済み
+                    if (typeof packFormatData !== 'undefined' && packFormatData.length > 0) {
+                        for (const pf of packFormatData) {
+                            // versionKey が pf.from と pf.to の範囲内にあるかチェック
+                            if (compareVersions(versionKey, pf.from) >= 0 && compareVersions(versionKey, pf.to) <= 0) {
+                                if (pf.from === pf.to) {
+                                    displayVersion = pf.from; // from と to が同じなら単一バージョン表示
+                                } else {
+                                    displayVersion = `${pf.from} - ${pf.to}`;
+                                }
+                                break; // 最初に見つかった範囲を採用
+                            }
+                        }
+                    }
+                    row.insertCell().outerHTML = `<td class="px-4 py-2 text-gray-900 text-right align-top">${displayVersion}</td>`;
+                    const fileCell = row.insertCell();
+                    fileCell.className = 'px-4 py-2 align-top';
+                    fileCell.innerHTML = `<a href="${linkData.url}" class="text-blue-600 hover:underline" download><i class="fas fa-download mr-1"></i>${linkData.file}</a>`;
+                    const sha1Cell = row.insertCell();
+                    sha1Cell.className = 'px-4 py-2 align-top';
+                    sha1Cell.innerHTML = `<span class="font-mono text-xs break-all">${linkData.sha1 || 'N/A'}</span>`;
                     const sizeCell = row.insertCell();
                     sizeCell.textContent = linkData.size || 'N/A';
-                    sizeCell.className = 'px-4 py-2 text-right';
+                    sizeCell.className = 'px-4 py-2 text-right align-top';
                 });
             } else {
                 modDownloadsTbodyElement.innerHTML = '<tr><td colspan="4" class="px-4 py-2 text-center text-gray-500">利用可能なダウンロードはありません。</td></tr>';

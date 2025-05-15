@@ -15,6 +15,7 @@
 
 <body class="flex flex-col min-h-screen">
   <div class="js-mods-data" style="display:none" data-mods='{{ getJsonFromFile(public_path("index.json")) }}'></div>
+  <div class="js-packformat-data" style="display:none" data-packformat='{{ json_encode(config("packformat"), true) }}'></div>
   <header class="bg-gray-800 text-white p-4 flex justify-between items-center">
     <div class="text-lg font-semibold">{{ $title }}</div>
     <button class="text-white text-xl md:hidden" onclick="toggleMobileMenu()">
@@ -39,6 +40,16 @@
     &copy; {{ $year }} {{ $title }}
   </footer>
   <script><!--
+    const packformatDataElement = document.querySelector('.js-packformat-data');
+    let packFormatData = []
+    if (packformatDataElement && packformatDataElement.dataset.packformat) {
+        try {
+            packFormatData = JSON.parse(packformatDataElement.dataset.packformat);
+        } catch (e) {
+            console.error('Error parsing packformat data:', e, packformatDataElement.dataset.packformat);
+        }
+    }
+
     function toggleMods(el) {
       const list = el.parentElement.querySelector('.mod-list');
       const arrow = el.querySelector('.toggle-arrow');
@@ -181,26 +192,6 @@
         if (ai !== bi) return ai - bi;
       }
       return 0;
-    }
-
-    let ascending = true;
-
-    function sortTableByVersion() {
-      const tbody = document.querySelector("table tbody");
-      const rows = Array.from(tbody.querySelectorAll("tr"));
-      rows.sort((rowA, rowB) => {
-        const verA = rowA.querySelector("td").textContent.trim();
-        const verB = rowB.querySelector("td").textContent.trim();
-        return ascending ? compareVersions(verA, verB) : compareVersions(verB, verA);
-      });
-      ascending = !ascending;
-      rows.forEach(row => tbody.appendChild(row));
-      const up = document.getElementById("versionSortUp");
-      const down = document.getElementById("versionSortDown");
-      up.classList.toggle("text-gray-800", ascending);
-      up.classList.toggle("text-gray-400", !ascending);
-      down.classList.toggle("text-gray-800", !ascending);
-      down.classList.toggle("text-gray-400", ascending);
     }
   --></script>
 @stack('scripts')

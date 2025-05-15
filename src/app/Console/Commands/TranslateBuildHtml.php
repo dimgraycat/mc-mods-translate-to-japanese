@@ -31,6 +31,8 @@ class TranslateBuildHtml extends Command
             'index',
             'mods'
         ];
+        $packFormatsData = config('packformat'); // packformat.php の内容を読み込む
+
         foreach ($pages as $page) {
             $html = view($page, [
                 'year' => Carbon::today()->year,
