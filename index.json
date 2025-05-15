@@ -1,0 +1,107 @@
+[
+    {
+        "id": "displaydelight",
+        "name": "Display Delight",
+        "versions": [
+            "1.20.1"
+        ],
+        "links": {
+            "1.20.1": {
+                "file": "displaydelight-1.2.0_1.20.1-ja.zip",
+                "url": "https://github.com/dimgraycat/mc-mods-translate-to-japanese/releases/download/v0.2.1/displaydelight-1.2.0_1.20.1-ja.zip",
+                "sha1": "025fa572e69bc3fe700735d06315d8c5adeb2aeb",
+                "size": "0.51 KB"
+            }
+        }
+    },
+    {
+        "id": "pamhc2crops",
+        "name": "Pam's HarvestCraft 2 - Crops",
+        "versions": [
+            "1.20.1"
+        ],
+        "links": {
+            "1.20.1": {
+                "file": "pamhc2crops-1.20-1.0.3_1.20.1-ja.zip",
+                "url": "https://github.com/dimgraycat/mc-mods-translate-to-japanese/releases/download/v0.2.1/pamhc2crops-1.20-1.0.3_1.20.1-ja.zip",
+                "sha1": "8f377630ef34b2ed236bc70d7b878fed11c1264d",
+                "size": "3.74 KB"
+            }
+        }
+    },
+    {
+        "id": "pamhc2foodcore",
+        "name": "Pam's HarvestCraft 2 - Food Core",
+        "versions": [
+            "1.20.1"
+        ],
+        "links": {
+            "1.20.1": {
+                "file": "pamhc2foodcore-1.20.4-1.0.5_1.20.1-ja.zip",
+                "url": "https://github.com/dimgraycat/mc-mods-translate-to-japanese/releases/download/v0.2.1/pamhc2foodcore-1.20.4-1.0.5_1.20.1-ja.zip",
+                "sha1": "a415d4ddc18026cfaff6b074e7f3f1f334d05885",
+                "size": "2.76 KB"
+            }
+        }
+    },
+    {
+        "id": "pamhc2foodextended",
+        "name": "Pam's HarvestCraft 2 - Food Extended",
+        "versions": [
+            "1.20.1"
+        ],
+        "links": {
+            "1.20.1": {
+                "file": "pamhc2foodextended-1.20.4-1.0.1_1.20.1-ja.zip",
+                "url": "https://github.com/dimgraycat/mc-mods-translate-to-japanese/releases/download/v0.2.1/pamhc2foodextended-1.20.4-1.0.1_1.20.1-ja.zip",
+                "sha1": "2c46906287994484dc10284bda2ae162c152c885",
+                "size": "11.78 KB"
+            }
+        }
+    },
+    {
+        "id": "pamhc2trees",
+        "name": "Pam's HarvestCraft 2 - Trees",
+        "versions": [
+            "1.20.1"
+        ],
+        "links": {
+            "1.20.1": {
+                "file": "pamhc2trees-1.20-1.0.2_1.20.1-ja.zip",
+                "url": "https://github.com/dimgraycat/mc-mods-translate-to-japanese/releases/download/v0.2.1/pamhc2trees-1.20-1.0.2_1.20.1-ja.zip",
+                "sha1": "4f158528b96fc27fc28c5ce70b1fedfddc4d7ce9",
+                "size": "2.04 KB"
+            }
+        }
+    },
+    {
+        "id": "reimaginingpotatoes",
+        "name": "Poisonous Potato Update",
+        "versions": [
+            "1.20.1"
+        ],
+        "links": {
+            "1.20.1": {
+                "file": "reimaginingpotatoes-1.20.1-1.0.0-forge_1.20.1-ja.zip",
+                "url": "https://github.com/dimgraycat/mc-mods-translate-to-japanese/releases/download/v0.2.1/reimaginingpotatoes-1.20.1-1.0.0-forge_1.20.1-ja.zip",
+                "sha1": "f537e6dca9f2204c5d57eddd870d054641da92b3",
+                "size": "11.14 KB"
+            }
+        }
+    },
+    {
+        "id": "twilightforest",
+        "name": "The Twilight Forest (黄昏の森)",
+        "versions": [
+            "1.20.1"
+        ],
+        "links": {
+            "1.20.1": {
+                "file": "twilightforest-1.20.1-4.3.2508-universal_1.20.1-ja.zip",
+                "url": "https://github.com/dimgraycat/mc-mods-translate-to-japanese/releases/download/v0.2.1/twilightforest-1.20.1-4.3.2508-universal_1.20.1-ja.zip",
+                "sha1": "49ffad806bae84ffe2b7dd3f909d684a0a84ee0c",
+                "size": "14.91 KB"
+            }
+        }
+    }
+]
