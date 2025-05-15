@@ -57,13 +57,6 @@ jobs:
             fi
           done
 
-      - name: 🔄 Run translate:pack-all for all versions
-        run: |
-          for ver in $(find translated -mindepth 1 -maxdepth 1 -type d -exec basename {} \;); do
-            echo "🛠  Building translated-all-in-$ver.zip"
-            make pack-all VER=$ver
-          done
-
       - name:  Upload new zips to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
