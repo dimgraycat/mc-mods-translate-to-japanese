@@ -23,4 +23,5 @@ yarn-error.log
 /.zed
 
 # add
-/public/index.json
+/public/*
+!/public/robots.txt
