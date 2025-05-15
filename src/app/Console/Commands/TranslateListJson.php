@@ -65,9 +65,10 @@ class TranslateListJson extends Command
             foreach (File::directories($verDir) as $modDir) {
                 $mod = basename($modDir);
 
-                $mods[$mod]['name'] = config("modnames.{$mod}", $mod);
+                $jarFile = config("modnames.{$mod}.jarFile", $mod);
+                $mods[$mod]['name'] = config("modnames.{$mod}.modName", $mod);
                 $mods[$mod]['versions'][] = $ver;
-                $mods[$mod]['links'][] = "{$baseUrl}/{$mod}-translate-to-japanese-{$ver}.zip";
+                $mods[$mod]['links'][] = "{$baseUrl}/{$jarFile}_{$ver}-ja.zip";
             }
         }
 

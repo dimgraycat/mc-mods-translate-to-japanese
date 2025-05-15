@@ -40,6 +40,8 @@ class TranslateModExtract extends Command
             return Command::FAILURE;
         }
 
+        $jarFileNameWithoutExt = pathinfo($jarPath, PATHINFO_FILENAME);
+
         $zip = new ZipArchive();
         if ($zip->open($jarPath) !== true) {
             $this->error("Failed to open MOD jar: {$jarPath}");
@@ -63,7 +65,7 @@ class TranslateModExtract extends Command
 
                 $zip->close();
 
-                $this->addModNameToConfig($modName);
+                $this->addModNameToConfig($modName, $jarFileNameWithoutExt);
 
                 return Command::SUCCESS;
             }
@@ -74,19 +76,36 @@ class TranslateModExtract extends Command
         return Command::FAILURE;
     }
 
-    protected function addModNameToConfig(string $modName): void
+    protected function addModNameToConfig(string $modName, string $jarFileNameWithoutExt): void
     {
         $modnamesPath = config_path('modnames.php');
         $modnames = file_exists($modnamesPath) ? include $modnamesPath : [];
 
-        if (!array_key_exists($modName, $modnames)) {
-            $modnames[$modName] = $modName;
-            ksort($modnames);
-
-            $export = "<?php\n\nreturn " . var_export($modnames, true) . ";\n";
-            file_put_contents($modnamesPath, $export);
-
-            $this->info("✅ modnames.php に {$modName} を追加しました。");
+        // 旧形式（modName => 表示名の文字列）を新形式に変換
+        foreach ($modnames as $key => $value) {
+            if (is_string($value)) {
+                $modnames[$key] = [
+                    'modName' => $key,
+                    'jarFile' => '',
+                    'displayName' => $value,
+                ];
+            }
         }
+
+        // 追加または更新
+        $modnames[$modName]['modName'] = $modName;
+        $modnames[$modName]['jarFile'] = $jarFileNameWithoutExt;
+
+        ksort($modnames);
+
+        $export = var_export($modnames, true);
+        $export = str_replace("array (", "[", $export);
+        $export = str_replace("),", "],", $export);
+        $export = str_replace("\n)", "\n]", $export);
+        $export = str_replace("=> \n  [", "=> [", $export);
+        $export = "<?php\n\nreturn " . $export . ";\n";
+        file_put_contents($modnamesPath, $export);
+
+        $this->info("✅ modnames.php に {$modName} を追加または更新しました。");
     }
 }

@@ -73,3 +73,7 @@ enchant-levels:
 .PHONY: list-json
 list-json:
 	docker compose run --rm --user $(UID):$(GID) $(SERVICE) php artisan translate:list-json
+
+.PHONY: build-html
+build-html:
+	docker compose run --rm --user $(UID):$(GID) $(SERVICE) php artisan translate:build-html

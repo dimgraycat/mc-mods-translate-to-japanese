@@ -48,8 +48,9 @@ class TranslateModPack extends Command
             return Command::FAILURE;
         }
 
+        $jarFile = config("modnames.{$mod}.jarFile");
         $description = env('PACK_DESCRIPTION', "Translation Pack for {$mod}");
-        $zipPath = base_path("build/resourcepacks/{$mod}-translate-to-japanese-{$ver}.zip");
+        $zipPath = base_path("build/resourcepacks/{$jarFile}_{$ver}-ja.zip");
         @mkdir(dirname($zipPath), 0777, true);
 
         $zip = new ZipArchive();
@@ -64,7 +65,7 @@ class TranslateModPack extends Command
             $zip->addFile($src, "assets/{$mod}/lang/ja_jp.json");
 
             $zip->close();
-            $this->info("Created resource pack: build/resourcepacks/{$mod}-translate-to-japanese-{$ver}.zip");
+            $this->info("Created resource pack: build/resourcepacks/{$jarFile}_{$ver}-ja.zip");
             return Command::SUCCESS;
         } else {
             $this->error("Failed to create zip file.");
