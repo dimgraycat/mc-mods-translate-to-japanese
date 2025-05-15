@@ -3,3 +3,6 @@
 /.nova
 /.vscode
 /.zed
+
+/src/public/*
+!/src/public/robots.txt
