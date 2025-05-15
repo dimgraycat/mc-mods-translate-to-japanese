@@ -27,12 +27,18 @@ class TranslateBuildHtml extends Command
      */
     public function handle()
     {
-        $html = view('index', [
-            'year' => Carbon::today()->year,
-            'pageName' => null,
-        ])->render();
-        $outputPath = base_path('public/index.html');
-        File::ensureDirectoryExists(dirname($outputPath));
-        File::put($outputPath, $html);
+        $pages = [
+            'index',
+            'mods'
+        ];
+        foreach ($pages as $page) {
+            $html = view($page, [
+                'year' => Carbon::today()->year,
+                'pageName' => null,
+            ])->render();
+            $outputPath = base_path("public/{$page}.html");
+            File::ensureDirectoryExists(dirname($outputPath));
+            File::put($outputPath, $html);
+        }
     }
 }

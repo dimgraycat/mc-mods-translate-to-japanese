@@ -25,7 +25,7 @@
             class="flex items-center gap-1 px-2 py-1 rounded hover:bg-gray-200">
             <span>バージョン</span>
             <span class="relative w-3 h-4 ml-1">
-              <i id="versionSortUp" class="fas fa-sort-up text-gray-800 absolute top-0 left-0"></i>
+              <i id="versionSortUp" class="fas fa-sort-up text-gray-400 absolute top-0 left-0"></i>
               <i id="versionSortDown" class="fas fa-sort-down text-gray-400 absolute bottom-0 left-0"></i>
             </span>
           </button>

@@ -14,6 +14,7 @@
 </head>
 
 <body class="flex flex-col min-h-screen">
+  <div class="js-mods-data" style="display:none" data-mods='{{ getJsonFromFile(public_path("index.json")) }}'></div>
   <header class="bg-gray-800 text-white p-4 flex justify-between items-center">
     <div class="text-lg font-semibold">{{ $title }}</div>
     <button class="text-white text-xl md:hidden" onclick="toggleMobileMenu()">
@@ -28,7 +29,6 @@
       </a>
     </nav>
   </header>
-@include('layouts.parts.mobile-menus')
   <div class="flex flex-wrap flex-1">
     @include('layouts.parts.side-menus')
     <main class="flex-1 p-4">
@@ -38,7 +38,7 @@
   <footer class="bg-gray-800 text-white text-right py-2 px-4">
     &copy; {{ $year }} {{ $title }}
   </footer>
-  <script>
+  <script><!--
     function toggleMods(el) {
       const list = el.parentElement.querySelector('.mod-list');
       const arrow = el.querySelector('.toggle-arrow');
@@ -73,18 +73,101 @@
       arrow.classList.toggle('rotate');
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
-      const modList = document.querySelector('.mod-list');
-      const modArrow = document.querySelector('.toggle-arrow');
-      if (modList) {
-        modList.classList.remove('open');
-        modList.style.maxHeight = '0';
-        modList.style.overflow = 'hidden';
-        modList.style.visibility = 'hidden';
-      }
-      if (modArrow) modArrow.classList.remove('rotate');
-    });
+    function getQueryParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
+    }
 
+    function generateSideMenuMods() {
+      const modsDataElement = document.querySelector('.js-mods-data');
+      const sideModListElement = document.getElementById('sideModList');
+
+      if (!modsDataElement || !sideModListElement) {
+        console.error('Required elements for side menu generation not found.');
+        return;
+      }
+
+      try {
+        const modsJsonString = modsDataElement.dataset.mods;
+        const mods = JSON.parse(modsJsonString);
+
+        if (!Array.isArray(mods)) {
+          console.error('Parsed mods data is not an array.');
+          return;
+        }
+
+        sideModListElement.innerHTML = '';
+
+        mods.forEach(mod => {
+          if (mod && mod.name) {
+            const listItem = document.createElement('li');
+            const link = document.createElement('a');
+            const modId = mod.id;
+
+            link.href = `mods.html?id=${modId}`;
+            link.className = 'block bg-gray-200 px-2 py-0.5 rounded hover:bg-gray-300 whitespace-normal break-words text-sm';
+            link.title = mod.name;
+            link.textContent = mod.name;
+
+            listItem.appendChild(link);
+            sideModListElement.appendChild(listItem);
+          }
+        });
+      } catch (error) {
+        console.error('Error parsing mods data or generating side menu:', error);
+      }
+    }
+
+    function openModsList() {
+      const list = document.getElementById('sideModList');
+      const toggleButton = list.previousElementSibling;
+      if (!toggleButton) return;
+      const arrow = toggleButton.querySelector('.toggle-arrow');
+
+      if (list && !list.classList.contains('open')) {
+        list.style.visibility = 'visible';
+        list.style.maxHeight = list.scrollHeight + 'px';
+        list.classList.add('open');
+        if (arrow) arrow.classList.add('rotate');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      generateSideMenuMods();
+
+      let modSectionOpenedByParam = false;
+      const targetModId = getQueryParam('id');
+      const sideModList = document.getElementById('sideModList');
+
+      if (targetModId && sideModList) {
+        const links = sideModList.querySelectorAll('a');
+        links.forEach(link => {
+          try {
+            const linkUrl = new URL(link.href);
+            const linkModId = linkUrl.searchParams.get('id');
+            if (linkModId === targetModId) {
+              link.classList.add('bg-blue-200', 'font-semibold');
+              openModsList();
+              modSectionOpenedByParam = true;
+            }
+          } catch (e) {
+          }
+        });
+      }
+
+      if (!modSectionOpenedByParam) {
+        const modToggleButton = sideModList ? sideModList.previousElementSibling : null;
+        const modArrow = modToggleButton ? modToggleButton.querySelector('.toggle-arrow') : null;
+
+        if (sideModList) {
+          sideModList.classList.remove('open');
+          sideModList.style.maxHeight = '0';
+          sideModList.style.overflow = 'hidden';
+          sideModList.style.visibility = 'hidden';
+        }
+        if (modArrow) modArrow.classList.remove('rotate');
+      }
+    });
     function parseVersion(v) {
       return v.split('.').map(n => parseInt(n, 10));
     }
@@ -119,7 +202,7 @@
       down.classList.toggle("text-gray-800", !ascending);
       down.classList.toggle("text-gray-400", ascending);
     }
-  </script>
+  --></script>
 @stack('scripts')
 </body>
 
