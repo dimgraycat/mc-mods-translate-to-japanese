@@ -36,9 +36,9 @@ class TranslateModPack extends Command
             return Command::FAILURE;
         }
 
-        $src = storage_path("tmp/{$mod}/lang/ja_jp.json");
+        $src = base_path("translated/{$ver}/{$mod}/lang/ja_jp.json");
         if (!file_exists($src)) {
-            $this->error("ja_jp.json not found: tmp/{$mod}/lang/ja_jp.json");
+            $this->error("ja_jp.json not found: translated/{$ver}/{$mod}/lang/ja_jp.json");
             return Command::FAILURE;
         }
 

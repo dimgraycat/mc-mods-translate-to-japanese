@@ -43,22 +43,14 @@ extract:
 
 .PHONY: pack
 pack:
-	@zip="build/resourcepacks/$(NAME)-translate-to-japanese-$(VER).zip"; \
-	json="translated/$(VER)/$(NAME)/lang/ja_jp.json"; \
-	if [ ! -f $$zip ] || [ $$json -nt $$zip ]; then \
-		echo "Packing: $(NAME)-translate-to-japanese-$(VER)"; \
-		cp -r $(JSON_SRC) src/storage/tmp; \
-		docker compose run --rm --user $(UID):$(GID) $(SERVICE) php artisan translate:pack --name $(NAME) --ver $(VER); \
-		rm -rf src/storage/tmp/*; \
-	else \
-		echo "No update: skipping pack for $(NAME)-translate-to-japanese-$(VER)"; \
-	fi
+	cp -r $(JSON_SRC) src/storage/tmp; \
+	docker compose run --rm --user $(UID):$(GID) $(SERVICE) php artisan translate:pack --name $(NAME) --ver $(VER); \
+	rm -rf src/storage/tmp/*;
 
 .PHONY: pack-all
 pack-all:
 	@zip="build/resourcepacks/00-translated-all-in-{$VER}.zip"; \
 	echo "Packing: 00-translated-all-in-{$VER}.zip"; \
-	cp -r $(JSON_VER_SRC) src/storage/tmp; \
 	docker compose run --rm --user $(UID):$(GID) $(SERVICE) php artisan translate:pack-all --ver $(VER); \
 	rm -rf src/storage/tmp/*;
 

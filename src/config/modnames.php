@@ -1,6 +1,11 @@
 <?php
 
 return [
+  'attributeslib' => [
+    'modName' => 'attributeslib',
+    'jarFile' => 'ApothicAttributes-1.20.1-1.3.7',
+    'displayName' => 'Apothic Attributes'
+  ],
   'displaydelight' => [
     'modName' => 'displaydelight',
     'jarFile' => 'displaydelight-1.2.0',
